@@ -32,14 +32,6 @@ const cityOptions = {
   strickBounds: false,
 }
 
-
-function getLocation(match, cities) {
-  return cities.filter(e => {
-    const reg = new regExp(match, 'gi');
-    return e.match(reg);
-  })
-}
-
 const options = {
 	method: 'GET',
 	headers: {
