@@ -25,7 +25,7 @@ var lng = '';
 var searchLocation;
 var stat = '';
 var geo = '';
-var cities = [];
+var searchInput = '';
 const countryList = './countries.json';
 const cityOptions = {
   types: ['(cities)'],
@@ -48,5 +48,9 @@ function fetchMapOverlapData() {
   stat = data;
   console.log(stat)
   })
+}
 
+function citySearch() {
+ searchInput = document.getElementById('country-name').value;
+  console.log(searchInput)
 }

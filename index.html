@@ -47,7 +47,7 @@
     </div>
     <div class='nicebox'>
             <input id='country-name' type='text' placeholder='City...'></input>     
-            <button id="button" type="button">Search</button>
+            <button id="button" type="submit">Search</button>
       <ul class='suggestions'></ul>
     </div>
     <div id="data-box" class="nicebox">
@@ -74,8 +74,6 @@
     draggable: true
   });
 
-
-
 map.data.loadGeoJson(polygonData);
    map.data.setStyle({
     fillColor: 'green',
@@ -86,7 +84,6 @@ map.data.loadGeoJson(polygonData);
   map.data.addListener('click', function(e) {
     searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
     fetchMapOverlapData();
-    searchCity();
   });
     map.data.addListener('mouseover', function(e) {
       map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
@@ -104,13 +101,15 @@ const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   
   autoComplete.addListener('place_changed', () => {
     const place = autoComplete.getPlace();
-  })
+    lat = place.geometry.location.lat();
+    lng = place.geometry.location.lng();
+    marker.setPosition({lat, lng});
+    citySearch();
+  });
 
+  document.getElementById('button').addEventListener('click', citySearch);
+  
     loadMapShapes();
-  window.onload = function() {
-    searchCity();
-  }
-
 }
     </script>
   </body>
