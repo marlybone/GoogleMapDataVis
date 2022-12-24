@@ -66,6 +66,7 @@
      styles: mapStyle,
    };
 
+  var service = new google.maps.places.PlacesService(map);
   var map = new google.maps.Map(document.getElementById('map'), options)
   var geoCoder = new google.maps.Geocoder(); 
   var marker = new google.maps.Marker({
@@ -100,14 +101,20 @@ const input = document.getElementById('country-name');
 const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   
   autoComplete.addListener('place_changed', () => {
-    const place = autoComplete.getPlace();
-    console.log(searchInput);
-    cityInput = searchInput.match(/\b\w+/);
-    citySearch();
-    fetchCityData();
+    place = autoComplete.getPlace();
+    service.nearbySearch({
+    location: place,
+    radius: 5000,
+    type: 'tourist_attraction'
+  }, function(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      console.log(results)
+    }
+    });
   });
 
   document.getElementById('button').addEventListener('click', citySearch);
+
   
     loadMapShapes();
 }

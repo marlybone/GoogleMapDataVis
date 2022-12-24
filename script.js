@@ -23,7 +23,14 @@ var mapStyle = [{
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
-var cityInput;
+var place;
+
+/* PlacesService variables*/
+var request = {
+  placeId: placesRequest,
+  fields: ['name', 'rating', 'formatted_phone_number', 'geometry', 'formatted address']
+}
+var placesRequest;
 
 
 
@@ -59,6 +66,8 @@ function fetchMapOverlapData() {
 
 function citySearch() {
  searchInput = document.getElementById('country-name').value;
+  cityInput = searchInput.match(/\b\w+/);
+    fetchCityData();
 }
 
 function fetchCityData() {
@@ -68,10 +77,9 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
-function isItNegative(num) {
-  var prefix = '';
-    if(num > 0){
-     prefix = ' ';
+function placesServiceSearch(placesRequest, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    createMarker(placesRequest);
+    console.log(placesRequest);
   }
-  return prefix+num;
 }
