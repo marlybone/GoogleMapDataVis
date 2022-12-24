@@ -1,5 +1,6 @@
 var APIKEY = 'AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU';
 const myLngLat = {lat: 51.4931, lng: -0.118092};
+var polygonData = 'https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson';
 var mapStyle = [{
           'featureType': 'all',
           'elementType': 'all',
@@ -19,14 +20,20 @@ var mapStyle = [{
         }];
 
 
-var polygonData = 'https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson';
+/* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
+var cityInput;
+
+
+
+/* Variable to assist with click event to get the countries ISO code*/
 var searchLocation;
 var stat = '';
 var geo = '';
+
+/* Variables to assist with autocomplete city name in the search bar*/
 var searchInput = '';
-const countryList = './countries.json';
 const cityOptions = {
   types: ['(cities)'],
   strickBounds: false,
@@ -52,5 +59,19 @@ function fetchMapOverlapData() {
 
 function citySearch() {
  searchInput = document.getElementById('country-name').value;
-  console.log(searchInput)
+}
+
+function fetchCityData() {
+  fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${cityInput}&types=CITY`, options)
+	.then(response => response.json())
+	.then(response => console.log(response))
+	.catch(err => console.error(err));
+}
+
+function isItNegative(num) {
+  var prefix = '';
+    if(num > 0){
+     prefix = ' ';
+  }
+  return prefix+num;
 }

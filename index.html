@@ -71,7 +71,7 @@
   var marker = new google.maps.Marker({
     position: myLngLat,
     map:map,
-    draggable: true
+    draggable: false
   });
 
 map.data.loadGeoJson(polygonData);
@@ -101,10 +101,10 @@ const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   
   autoComplete.addListener('place_changed', () => {
     const place = autoComplete.getPlace();
-    lat = place.geometry.location.lat();
-    lng = place.geometry.location.lng();
-    marker.setPosition({lat, lng});
+    console.log(searchInput);
+    cityInput = searchInput.match(/\b\w+/);
     citySearch();
+    fetchCityData();
   });
 
   document.getElementById('button').addEventListener('click', citySearch);
