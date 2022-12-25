@@ -107,17 +107,17 @@ const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
     if (place.geometry) {
       marker.setPosition(place.geometry.location);
       map.setCenter(place.geometry.location);
-      lat = place.geometry.location.lng();
-      lng = place.geometry.location.lat();
-      myLatLng = ({ lat, lng });
-          console.log(myLatLng)
+      lat = place.geometry.location.lat();
+      lng = place.geometry.location.lng();
+      latLong = ({ lat, lng });
+          console.log(latLong)
     }
   });
-
+ var newWindow = window.open('things-to-do.html');
 function searchPlaces() {
   var service = new google.maps.places.PlacesService(map);
   service.nearbySearch({
-    location: myLngLat,
+    location: latLong,
     radius: 5000,
     type: 'tourist_attraction'
   },function (results, status) {
@@ -125,19 +125,32 @@ function searchPlaces() {
       results.forEach(result => {
         service.getDetails({
           placeId: result.place_id,
-          fields: ['name', 'formatted_address', 'geometry']
+          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url'],
+          language: 'en'
         }, function (place, status){
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place);
+            console.log(place)
+            var origDocument = window.opener.document;
+            var elem = origDocument.getElementById('attractions');
+            var html = '';
+
+            for (var i = 0; i < results.length; i++){
+              html += 
+              html +=
+              html +=
+            }
         }
       });
     });
     }
   });
 }
-  document.getElementById('button').addEventListener('click', citySearch);
-  document.getElementById('button').addEventListener('click', searchPlaces);
-
+  
+  var element = document.getElementById('button');
+  element.addEventListener('click', function() {
+  citySearch();
+  searchPlaces();
+});
 }
     </script>
   </body>

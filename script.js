@@ -51,6 +51,7 @@ var mapOptions = {
   styles: mapStyle
 };
 
+/* API key for RapidAPI*/
 const options = {
 	method: 'GET',
 	headers: {
@@ -59,6 +60,7 @@ const options = {
 	}
 };
 
+/* API to fetch data from GEOGB cities */
 function fetchMapOverlapData() {
     fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${searchLocation}`, options)
   .then(res => res.json())
@@ -68,13 +70,14 @@ function fetchMapOverlapData() {
   })
 }
 
+/* function to get the value of the city and then only get the first word of the city */
 function citySearch() {
  searchInput = document.getElementById('country-name').value;
   cityInput = searchInput.match(/\b\w+/);
-  
     fetchCityData();
 }
 
+/* Another API call to geoDB to get the data for the specific city */
 function fetchCityData() {
   fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${cityInput}&types=CITY`, options)
 	.then(response => response.json())
