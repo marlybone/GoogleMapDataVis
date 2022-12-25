@@ -23,16 +23,6 @@ var mapStyle = [{
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
-var place;
-
-/* PlacesService variables*/
-var request = {
-  placeId: placesRequest,
-  fields: ['name', 'rating', 'formatted_phone_number', 'geometry', 'formatted address']
-}
-var placesRequest;
-
-
 
 /* Variable to assist with click event to get the countries ISO code*/
 var searchLocation;
@@ -45,6 +35,11 @@ const cityOptions = {
   types: ['(cities)'],
   strickBounds: false,
 }
+
+/* PlacesSearch function*/
+var type;
+var location;
+var radius; 
 
 const options = {
 	method: 'GET',
@@ -60,7 +55,6 @@ function fetchMapOverlapData() {
   .then(data => {
   console.log(searchLocation);
   stat = data;
-  console.log(stat)
   })
 }
 
@@ -77,9 +71,15 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
-function placesServiceSearch(placesRequest, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    createMarker(placesRequest);
-    console.log(placesRequest);
-  }
+function searchPlaces(location, radius, type) {
+
+  service.nearbySearch({
+    location: location,
+    radius: 5000,
+    type: 'tourist_attraction'
+  }, function (results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      results.forEach(result => console.log(result.name))
+    }
+  });
 }

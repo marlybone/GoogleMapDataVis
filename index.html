@@ -101,20 +101,11 @@ const input = document.getElementById('country-name');
 const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   
   autoComplete.addListener('place_changed', () => {
-    place = autoComplete.getPlace();
-    service.nearbySearch({
-    location: place,
-    radius: 5000,
-    type: 'tourist_attraction'
-  }, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      console.log(results)
-    }
-    });
+    var place = autoComplete.getPlace();
   });
-
   document.getElementById('button').addEventListener('click', citySearch);
 
+    var service = new google.maps.places.PlacesService(map);
   
     loadMapShapes();
 }
