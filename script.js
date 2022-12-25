@@ -25,11 +25,13 @@ var lat = '';
 var lng = '';
 var place = '';
 var cityInput = '';
+var latLong = '';
 
 /* Variable to assist with click event to get the countries ISO code*/
 var searchLocation;
 var stat = '';
 var geo = '';
+
 
 /* Variables to assist with autocomplete city name in the search bar*/
 var searchInput = '';
@@ -42,6 +44,12 @@ const cityOptions = {
 var type;
 var location;
 var radius; 
+var mapDiv = document.getElementById('map');
+var mapOptions = {
+  center: myLngLat,
+  zoom: 6,
+  styles: mapStyle
+};
 
 const options = {
 	method: 'GET',
@@ -63,6 +71,7 @@ function fetchMapOverlapData() {
 function citySearch() {
  searchInput = document.getElementById('country-name').value;
   cityInput = searchInput.match(/\b\w+/);
+  
     fetchCityData();
 }
 
@@ -73,16 +82,4 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
-  
-function searchPlaces() {
-  var service = new google.maps.places.PlacesService(map);
-  service.nearbySearch({
-    location: latLng,
-    radius: 5000,
-    type: 'tourist_attraction'
-  }, function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      results.forEach(result => console.log(result.name))
-    }
-  });
-}
+

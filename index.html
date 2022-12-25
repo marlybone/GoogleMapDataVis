@@ -54,7 +54,7 @@
       <label id="data-label" for="data-value"></label>
       <span id="data-value"></span>
     </div>
-    <section id="map"></section>
+    <div id="map"></div>
     <script defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU&libraries=places&callback=initMap"
     ></script>
@@ -62,11 +62,13 @@
     <script>function initMap() {
    var options = {
      center: myLngLat,
-     zoom: 4,
+     zoom: 5,
      styles: mapStyle,
    };
 
+  var service = new google.maps.places.PlacesService(map);
   var map = new google.maps.Map(document.getElementById('map'), options)
+  
   var geoCoder = new google.maps.Geocoder(); 
   var marker = new google.maps.Marker({
     position: myLngLat,
@@ -94,22 +96,48 @@ map.data.loadGeoJson(polygonData);
     map.data.addListener('click', function(e) {
     lat = e.latLng.lng();
     lng = e.latLng.lat();
-    console.log(lat, lng)
 });
   
 const input = document.getElementById('country-name');
 const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
+  autoComplete.bindTo("bounds", map);
   
   autoComplete.addListener('place_changed', () => {
     var place = autoComplete.getPlace();
-    lat = place.geometry.location.lat();
-    lng = place.geometry.location.lng();
-    latLng = ({ lat, lng})
+    if (place.geometry) {
+      marker.setPosition(place.geometry.location);
+      map.setCenter(place.geometry.location);
+      lat = place.geometry.location.lng();
+      lng = place.geometry.location.lat();
+      myLatLng = ({ lat, lng });
+          console.log(myLatLng)
+    }
   });
+
+function searchPlaces() {
+  var service = new google.maps.places.PlacesService(map);
+  service.nearbySearch({
+    location: myLngLat,
+    radius: 5000,
+    type: 'tourist_attraction'
+  },function (results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      results.forEach(result => {
+        service.getDetails({
+          placeId: result.place_id,
+          fields: ['name', 'formatted_address', 'geometry']
+        }, function (place, status){
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            console.log(place);
+        }
+      });
+    });
+    }
+  });
+}
   document.getElementById('button').addEventListener('click', citySearch);
   document.getElementById('button').addEventListener('click', searchPlaces);
-  
-    loadMapShapes();
+
 }
     </script>
   </body>
