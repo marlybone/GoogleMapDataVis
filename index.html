@@ -66,7 +66,6 @@
      styles: mapStyle,
    };
 
-  var service = new google.maps.places.PlacesService(map);
   var map = new google.maps.Map(document.getElementById('map'), options)
   var geoCoder = new google.maps.Geocoder(); 
   var marker = new google.maps.Marker({
@@ -95,6 +94,7 @@ map.data.loadGeoJson(polygonData);
     map.data.addListener('click', function(e) {
     lat = e.latLng.lng();
     lng = e.latLng.lat();
+    console.log(lat, lng)
 });
   
 const input = document.getElementById('country-name');
@@ -102,10 +102,12 @@ const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   
   autoComplete.addListener('place_changed', () => {
     var place = autoComplete.getPlace();
+    lat = place.geometry.location.lat();
+    lng = place.geometry.location.lng();
+    latLng = ({ lat, lng})
   });
   document.getElementById('button').addEventListener('click', citySearch);
-
-    var service = new google.maps.places.PlacesService(map);
+  document.getElementById('button').addEventListener('click', searchPlaces);
   
     loadMapShapes();
 }

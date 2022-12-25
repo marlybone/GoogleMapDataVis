@@ -23,6 +23,8 @@ var mapStyle = [{
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
+var place = '';
+var cityInput = '';
 
 /* Variable to assist with click event to get the countries ISO code*/
 var searchLocation;
@@ -71,10 +73,11 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
-function searchPlaces(location, radius, type) {
-
+  
+function searchPlaces() {
+  var service = new google.maps.places.PlacesService(map);
   service.nearbySearch({
-    location: location,
+    location: latLng,
     radius: 5000,
     type: 'tourist_attraction'
   }, function (results, status) {
