@@ -47,7 +47,7 @@
     </div>
     <div class='nicebox'>
             <input id='country-name' type='text' placeholder='City...'></input>     
-            <button id="button" type="submit">Search</button>
+            <button id="button" type="submit" onClick='touristAttractions()'>Search</button>
       <ul class='suggestions'></ul>
     </div>
     <div id="data-box" class="nicebox">
@@ -59,99 +59,9 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU&libraries=places&callback=initMap"
     ></script>
         <script src="script.js"></script>
-    <script>function initMap() {
-   var options = {
-     center: myLngLat,
-     zoom: 5,
-     styles: mapStyle,
-   };
-
-  var service = new google.maps.places.PlacesService(map);
-  var map = new google.maps.Map(document.getElementById('map'), options)
-  
-  var geoCoder = new google.maps.Geocoder(); 
-  var marker = new google.maps.Marker({
-    position: myLngLat,
-    map:map,
-    draggable: false
-  });
-
-map.data.loadGeoJson(polygonData);
-   map.data.setStyle({
-    fillColor: 'green',
-    strokeWeight: 0.7,
-    strokeColor: 'white',
-    strokeOpacity: 0.4
-   });
-  map.data.addListener('click', function(e) {
-    searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
-    fetchMapOverlapData();
-  });
-    map.data.addListener('mouseover', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
-    map.data.addListener('mouseout', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 0.7, strokeOpacity: 0.4})
-    });
-      });
-    map.data.addListener('click', function(e) {
-    lat = e.latLng.lng();
-    lng = e.latLng.lat();
-});
-  
-const input = document.getElementById('country-name');
-const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
-  autoComplete.bindTo("bounds", map);
-  
-  autoComplete.addListener('place_changed', () => {
-    var place = autoComplete.getPlace();
-    if (place.geometry) {
-      marker.setPosition(place.geometry.location);
-      map.setCenter(place.geometry.location);
-      lat = place.geometry.location.lat();
-      lng = place.geometry.location.lng();
-      latLong = ({ lat, lng });
-          console.log(latLong)
+    <script>function touristAttractions() {
+          window.location = 'tourism.html';
     }
-  });
- var newWindow = window.open('things-to-do.html');
-function searchPlaces() {
-  var service = new google.maps.places.PlacesService(map);
-  service.nearbySearch({
-    location: latLong,
-    radius: 5000,
-    type: 'tourist_attraction'
-  },function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      results.forEach(result => {
-        service.getDetails({
-          placeId: result.place_id,
-          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url'],
-          language: 'en'
-        }, function (place, status){
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place)
-            var origDocument = window.opener.document;
-            var elem = origDocument.getElementById('attractions');
-            var html = '';
-
-            for (var i = 0; i < results.length; i++){
-              html += 
-              html +=
-              html +=
-            }
-        }
-      });
-    });
-    }
-  });
-}
-  
-  var element = document.getElementById('button');
-  element.addEventListener('click', function() {
-  citySearch();
-  searchPlaces();
-});
-}
     </script>
   </body>
 </html>

@@ -20,6 +20,88 @@ var mapStyle = [{
         }];
 
 
+window.addEventListener('load', initMap);
+function initMap() {
+     var options = {
+     center: myLngLat,
+     zoom: 5,
+     styles: mapStyle,
+   };
+  
+  var map = new google.maps.Map(document.getElementById('map'), options)
+  var marker = new google.maps.Marker({
+    position: myLngLat,
+    map:map,
+    draggable: false
+  });
+
+map.data.loadGeoJson(polygonData);
+   map.data.setStyle({
+    fillColor: 'green',
+    strokeWeight: 0.7,
+    strokeColor: 'white',
+    strokeOpacity: 0.4
+   });
+  map.data.addListener('click', function(e) {
+    searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
+    fetchMapOverlapData();
+  });
+    map.data.addListener('mouseover', function(e) {
+      map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
+    map.data.addListener('mouseout', function(e) {
+      map.data.overrideStyle(e.feature, {strokeWeight: 0.7, strokeOpacity: 0.4})
+    });
+      });
+    map.data.addListener('click', function(e) {
+    lat = e.latLng.lng();
+    lng = e.latLng.lat();
+});
+  
+const input = document.getElementById('country-name');
+const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
+  autoComplete.bindTo("bounds", map);
+  
+  autoComplete.addListener('place_changed', () => {
+    var place = autoComplete.getPlace();
+    if (place.geometry) {
+      marker.setPosition(place.geometry.location);
+      map.setCenter(place.geometry.location);
+      lat = place.geometry.location.lat();
+      lng = place.geometry.location.lng();
+      latLong = ({ lat, lng });
+          console.log(latLong)
+    }
+  });
+function searchPlaces() {
+  var service = new google.maps.places.PlacesService(map);
+  service.nearbySearch({
+    location: latLong,
+    radius: 5000,
+    type: 'tourist_attraction'
+  },function (results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      results.forEach(result => {
+        service.getDetails({
+          placeId: result.place_id,
+          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url'],
+          language: 'en'
+        }, function (place, status){
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            console.log(place)   
+        }
+      });
+    });
+    }
+  });
+} 
+  var element = document.getElementById('button');
+  element.addEventListener('click', function() {
+  citySearch();
+  searchPlaces();
+});
+}
+
+
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
