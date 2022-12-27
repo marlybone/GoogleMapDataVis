@@ -47,7 +47,7 @@
     </div>
     <div class='nicebox'>
             <input id='country-name' type='text' placeholder='City...'></input>     
-            <button id="button" type="submit" onClick='touristAttractions()'>Search</button>
+            <button id="button" type="submit" onclick='createBoxes()'>Search</button>
       <ul class='suggestions'></ul>
     </div>
     <div id="data-box" class="nicebox">
@@ -55,13 +55,14 @@
       <span id="data-value"></span>
     </div>
     <div id="map"></div>
+    <div id='container'>
+      
+    </div>
     <script defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU&libraries=places&callback=initMap"
     ></script>
         <script src="script.js"></script>
-    <script>function touristAttractions() {
-          window.location = 'tourism.html';
-    }
+    <script>
     </script>
   </body>
 </html>

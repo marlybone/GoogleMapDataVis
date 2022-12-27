@@ -21,7 +21,7 @@ var mapStyle = [{
 
 
 window.addEventListener('load', initMap);
-function initMap() {
+  function initMap() {
      var options = {
      center: myLngLat,
      zoom: 5,
@@ -35,7 +35,7 @@ function initMap() {
     draggable: false
   });
 
-map.data.loadGeoJson(polygonData);
+  map.data.loadGeoJson(polygonData);
    map.data.setStyle({
     fillColor: 'green',
     strokeWeight: 0.7,
@@ -57,8 +57,8 @@ map.data.loadGeoJson(polygonData);
     lng = e.latLng.lat();
 });
   
-const input = document.getElementById('country-name');
-const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
+  const input = document.getElementById('country-name');
+  const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   autoComplete.bindTo("bounds", map);
   
   autoComplete.addListener('place_changed', () => {
@@ -72,7 +72,8 @@ const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
           console.log(latLong)
     }
   });
-function searchPlaces() {
+    
+  function searchPlaces() {
   var service = new google.maps.places.PlacesService(map);
   service.nearbySearch({
     location: latLong,
@@ -87,8 +88,9 @@ function searchPlaces() {
           language: 'en'
         }, function (place, status){
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(place)   
-        }
+            touristAttractions = place;
+            displayData(place);
+          }
       });
     });
     }
@@ -122,16 +124,14 @@ const cityOptions = {
   strickBounds: false,
 }
 
-/* PlacesSearch function*/
-var type;
-var location;
-var radius; 
+/* PlacesSearch function*/ 
 var mapDiv = document.getElementById('map');
 var mapOptions = {
   center: myLngLat,
   zoom: 6,
   styles: mapStyle
 };
+var touristAttractions = [];
 
 /* API key for RapidAPI*/
 const options = {
@@ -167,4 +167,16 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
+function displayData(data) {
+  sessionStorage.setItem('data', JSON.stringify(data));
+  window.location = 'tourism.html';
+}
 
+function createBoxes(data) {
+  let container = document.getElementById("container");
+    for (let i = 0; i < data.length; i++) {
+      const elem = document.createElement('div');
+        elem.innerHTML = `<h2>${data[i].name}</h2>`;
+          container.appendChild(elem);
+}
+}
