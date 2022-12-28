@@ -13,13 +13,18 @@
   </head>
   <body>
     <div id='container'>
-      
+      <h2>Hello</h2>
     </div>
     <script src="script.js">
-      window.addEventListener('load', function(){
-        const data = JSON.parse(sessionStorage.getItem('data'));
-        createBoxes(data);
-      })
+    </script>
+    <script>
+      /* for each data point create a box and present the data*/
+        window.addEventListener('load', function(){
+        const data = JSON.parse(sessionStorage.getItem('results'));
+        data.forEach(function(point){
+          
+        });
+      });
     </script>
   </body>
 </html>

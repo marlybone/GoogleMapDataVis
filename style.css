@@ -90,10 +90,10 @@ body,
 #container > div {
   box-shadow: 0px 4px 16px rgba(17,17,26,0.1), 0px 8px 24px rgba(17,17,26,0.1), 0px 16px 56px rgba(17,17,26,0.1);
   background: linear-gradient(to bottom, #57c1eb 0%,#246fa8 100%);
-  margin: 60px;
-  padding: 50px;
-  width: 400px;
-  height: 250px;
+  margin: 45px;
+  padding: 45px;
+  width: 250px;
+  height: 200px;
   border-radius: 25px;
 }
 

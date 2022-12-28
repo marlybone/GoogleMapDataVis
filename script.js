@@ -20,7 +20,7 @@ var mapStyle = [{
         }];
 
 
-window.addEventListener('load', initMap);
+
   function initMap() {
      var options = {
      center: myLngLat,
@@ -84,13 +84,15 @@ window.addEventListener('load', initMap);
       results.forEach(result => {
         service.getDetails({
           placeId: result.place_id,
-          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url'],
+          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url', 'review'],
           language: 'en'
         }, function (place, status){
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            touristAttractions = place;
-            displayData(place);
+            let results = place
+              console.log(results)
+              sessionStorage.setItem('results', JSON.stringify(results));
           }
+            window.location = 'tourism.html';
       });
     });
     }
@@ -124,6 +126,7 @@ const cityOptions = {
   strickBounds: false,
 }
 
+
 /* PlacesSearch function*/ 
 var mapDiv = document.getElementById('map');
 var mapOptions = {
@@ -131,7 +134,6 @@ var mapOptions = {
   zoom: 6,
   styles: mapStyle
 };
-var touristAttractions = [];
 
 /* API key for RapidAPI*/
 const options = {
@@ -165,18 +167,4 @@ function fetchCityData() {
 	.then(response => response.json())
 	.then(response => console.log(response))
 	.catch(err => console.error(err));
-}
-
-function displayData(data) {
-  sessionStorage.setItem('data', JSON.stringify(data));
-  window.location = 'tourism.html';
-}
-
-function createBoxes(data) {
-  let container = document.getElementById("container");
-    for (let i = 0; i < data.length; i++) {
-      const elem = document.createElement('div');
-        elem.innerHTML = `<h2>${data[i].name}</h2>`;
-          container.appendChild(elem);
-}
 }
