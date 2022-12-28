@@ -12,8 +12,8 @@
     <header></header>
   </head>
   <body>
-    <div id='container'>
-      <h2>Hello</h2>
+    <div id='container' class='container'>
+      <h2>hi</h2>
     </div>
     <script src="script.js">
     </script>
@@ -21,9 +21,14 @@
       /* for each data point create a box and present the data*/
         window.addEventListener('load', function(){
         const data = JSON.parse(sessionStorage.getItem('results'));
-        data.forEach(function(point){
-          
-        });
+        const dataArray = Object.values(data);
+        const grid = document.getElementById('container')
+        for (const object of dataArray) {
+          let div = document.createElement('div');
+          div.classList.add('box');
+          div.innerHTML = `<h2>${object.name}</h2>`;
+          grid.appendChild(div);
+        }
       });
     </script>
   </body>

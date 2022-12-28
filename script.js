@@ -88,8 +88,7 @@ var mapStyle = [{
           language: 'en'
         }, function (place, status){
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            let results = place
-              console.log(results)
+            let results = place;
               sessionStorage.setItem('results', JSON.stringify(results));
           }
             window.location = 'tourism.html';
