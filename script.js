@@ -88,10 +88,9 @@ async function searchPlaces() {
         language: 'en'
     }, (place, status) => resolve({ place, status })))));
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
-  console.log(places);
-  let viewData = sessionStorage.setItem('viewData', JSON.stringify(places));
-  window.open('tourism.html');
-
+    console.log('done');
+    sessionStorage.setItem('places', JSON.stringify(places));
+    window.open('tourism.html');
 }
 
     
@@ -169,3 +168,14 @@ function fetchCityData() {
 	.catch(err => console.error(err));
 }
 
+function createBoxes(data) {
+
+  console.log(data)
+  const container = document.querySelector("#container");
+    data.forEach(obj => {
+    let div = document.createElement('div');
+    div.classList.add('box');
+    div.innerText = `${obj.name}${obj.formatted_address}${obj.rating}`;
+    container.appendChild(div);
+    }) 
+}

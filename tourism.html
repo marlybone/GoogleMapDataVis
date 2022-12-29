@@ -17,23 +17,9 @@
     <script src="script.js">
     </script>
     <script>
-    window.onload = function(){
-    let viewData = JSON.parse(sessionStorage.getItem('places'));
-    let grid = document.getElementById('container');
-    viewData.forEach(obj => {
-
-    let div = document.createElement('div');
-    div.classList.add('box');
-    div.innerText = `${obj.name}`;
-    grid.appendChild(div);
-  })
-    }
-  window.addEventListener('unload', () => {
-    let parentDiv = document.getElementById('container');
-    while (parentDiv.firstChild) {
-      parentDiv.removeChild(parentDiv.firstChild);
-    }
-  })
+      places = JSON.parse(sessionStorage.getItem('places'));
+      console.log(places);
+      createBoxes(places);
     </script>
   </body>
 </html>
