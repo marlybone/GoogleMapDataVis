@@ -69,34 +69,32 @@ var mapStyle = [{
       lat = place.geometry.location.lat();
       lng = place.geometry.location.lng();
       latLong = ({ lat, lng });
-          console.log(latLong)
     }
   });
     
-  function searchPlaces() {
-  var service = new google.maps.places.PlacesService(map);
-  service.nearbySearch({
-    location: latLong,
-    radius: 5000,
-    type: 'tourist_attraction'
-  },function (results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      results.forEach(result => {
-        service.getDetails({
-          placeId: result.place_id,
-          fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url', 'review'],
-          language: 'en'
-        }, function (place, status){
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            let results = place;
-              sessionStorage.setItem('results', JSON.stringify(results));
-          }
-            window.location = 'tourism.html';
-      });
-    });
-    }
-  });
-} 
+async function searchPlaces() {
+    const service = new google.maps.places.PlacesService(map);
+    const { results, status } = await new Promise(resolve => service.nearbySearch({
+        location: latLong,
+        radius: 5000,
+        type: 'tourist_attraction'
+    }, (results, status) => resolve({ results, status })));
+
+    if (status !== google.maps.places.PlacesServiceStatus.OK) return;
+
+    const details = await Promise.all(results.map(result => new Promise(resolve => service.getDetails({
+        placeId: result.place_id,
+        fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url', 'review'],
+        language: 'en'
+    }, (place, status) => resolve({ place, status })))));
+    places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
+  console.log(places);
+  let viewData = sessionStorage.setItem('viewData', JSON.stringify(places));
+  window.open('tourism.html');
+
+}
+
+    
   var element = document.getElementById('button');
   element.addEventListener('click', function() {
   citySearch();
@@ -133,6 +131,9 @@ var mapOptions = {
   zoom: 6,
   styles: mapStyle
 };
+let places = [];
+
+
 
 /* API key for RapidAPI*/
 const options = {
@@ -167,3 +168,4 @@ function fetchCityData() {
 	.then(response => console.log(response))
 	.catch(err => console.error(err));
 }
+

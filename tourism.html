@@ -13,23 +13,27 @@
   </head>
   <body>
     <div id='container' class='container'>
-      <h2>hi</h2>
     </div>
     <script src="script.js">
     </script>
     <script>
-      /* for each data point create a box and present the data*/
-        window.addEventListener('load', function(){
-        const data = JSON.parse(sessionStorage.getItem('results'));
-        const dataArray = Object.values(data);
-        const grid = document.getElementById('container')
-        for (const object of dataArray) {
-          let div = document.createElement('div');
-          div.classList.add('box');
-          div.innerHTML = `<h2>${object.name}</h2>`;
-          grid.appendChild(div);
-        }
-      });
+    window.onload = function(){
+    let viewData = JSON.parse(sessionStorage.getItem('places'));
+    let grid = document.getElementById('container');
+    viewData.forEach(obj => {
+
+    let div = document.createElement('div');
+    div.classList.add('box');
+    div.innerText = `${obj.name}`;
+    grid.appendChild(div);
+  })
+    }
+  window.addEventListener('unload', () => {
+    let parentDiv = document.getElementById('container');
+    while (parentDiv.firstChild) {
+      parentDiv.removeChild(parentDiv.firstChild);
+    }
+  })
     </script>
   </body>
 </html>
