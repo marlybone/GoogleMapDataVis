@@ -1,0 +1,41 @@
+body,
+html {
+  margin: auto;
+  padding: 25px;
+}
+#container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 15px;
+  height: auto;
+  margin: 5px 5px auto;
+  padding: 20px;
+}
+
+.box {
+  box-shadow: 0 3px 10px rgb(0,0,0,0.2);
+  margin: 15px;
+  padding: 40px;
+  width: 200px;
+  height: 125px;
+  border-radius: 10px;
+  justify-content: center;
+  align-content: center;
+  overflow: hidden;
+}
+
+.box:active {
+  height: auto;
+  width: auto;
+}
+
+.box > h1 {
+  align-content: center;
+  justify-content: center;
+  display: flex;
+  
+}
+
+.box > h2 {
+  
+}

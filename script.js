@@ -169,13 +169,17 @@ function fetchCityData() {
 }
 
 function createBoxes(data) {
-
   console.log(data)
   const container = document.querySelector("#container");
     data.forEach(obj => {
     let div = document.createElement('div');
     div.classList.add('box');
-    div.innerText = `${obj.name}${obj.formatted_address}${obj.rating}`;
+    div.innerHTML = `
+    <h1>${obj.name}</h1>
+    <h3>Address:${obj.formatted_address}</h3>
+    <h2>${obj.rating}</h2>
+    <span class="fa-solid fa-user"></span>
+    `;
     container.appendChild(div);
-    }) 
+    })
 }
