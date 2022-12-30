@@ -176,6 +176,10 @@ function createBoxes(data) {
     div.innerHTML = `
     <h1>${obj.name}</h1>
     <h4>Address: ${obj.formatted_address}</h3>
+    <div>
+    <h5>${obj.reviews[0].author_name}</h5>
+    <p>${obj.reviews[0].text}</p>
+    </div>
     <div class='rating'>
     <h2>${obj.rating}</h2>
     <i class="fas fa-star" style="color: yellow;"></i>
