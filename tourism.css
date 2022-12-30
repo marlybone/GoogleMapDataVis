@@ -1,8 +1,13 @@
+:root {
+  font-family: Open -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
 body,
 html {
   margin: auto;
   padding: 25px;
 }
+
 #container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -14,14 +19,15 @@ html {
 
 .box {
   box-shadow: 0 3px 10px rgb(0,0,0,0.2);
-  margin: 15px;
-  padding: 40px;
-  width: 200px;
+  margin: 10px;
+  padding: 30px;
+  width: 240px;
   height: 125px;
   border-radius: 10px;
   justify-content: center;
   align-content: center;
   overflow: hidden;
+  background-color: #DBD7D7;
 }
 
 .box:active {
@@ -36,6 +42,27 @@ html {
   
 }
 
+.box > h4 {
+  display: flex;
+  align-content: left;
+  padding: 5px;
+  color: grey;
+  font-family: Lato;
+}
+
 .box > h2 {
-  
+  display: flex;
+  justify-content: center;
+}
+
+.rating {
+  display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.rating > h2 {
+  padding: 5px
 }
