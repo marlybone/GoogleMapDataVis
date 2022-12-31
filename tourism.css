@@ -19,13 +19,12 @@ html {
 
 .box {
   box-shadow: 0 3px 10px rgb(0,0,0,0.2);
-  margin: 5px;
+  margin: 10px;
   padding: 25px;
-  width: 240px;
-  height: 125px;
+  width: 280px;
+  height: 150px;
   border-radius: 10px black;
   overflow: hidden;
-  background-color: #F5F6F6;
 }
 
 .box:hover {
@@ -37,15 +36,16 @@ html {
   align-content: center;
   justify-content: center;
   display: flex;
-  
+  font-weight: 400;
 }
 
-.box > h4 {
+.address {
   display: flex;
   align-content: left;
-  padding: 5px;
-  color: grey;
-  font-family: Lato;
+  justify-content: left;
+  padding: 15px;
+  color: black;
+  font-weight: 3000;
 }
 
 .box > h2 {
@@ -64,4 +64,3 @@ html {
 .rating > h2 {
   padding: 5px
 }
-

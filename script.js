@@ -175,7 +175,7 @@ function createBoxes(data) {
     div.classList.add('box');
     div.innerHTML = `
     <h1>${obj.name}</h1>
-    <h4>Address: ${obj.formatted_address}</h3>
+    <p class='address'>Address: ${obj.formatted_address}</p>
     <div class="swiffy-slider">
     <ul class="slider-container">
         <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[0].author_name}                </h5>
@@ -206,7 +206,8 @@ function createBoxes(data) {
 </div>
     <div class='rating'>
     <h2>${obj.rating}</h2>
-    <i class="fas fa-star" style="color: yellow;"></i>
+    <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;"></i>
     </div
     `;
     container.appendChild(div);
