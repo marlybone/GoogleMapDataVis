@@ -19,18 +19,16 @@ html {
 
 .box {
   box-shadow: 0 3px 10px rgb(0,0,0,0.2);
-  margin: 10px;
-  padding: 30px;
+  margin: 5px;
+  padding: 25px;
   width: 240px;
   height: 125px;
-  border-radius: 10px;
-  justify-content: center;
-  align-content: center;
+  border-radius: 10px black;
   overflow: hidden;
-  background-color: #DBD7D7;
+  background-color: #F5F6F6;
 }
 
-.box:active {
+.box:hover {
   height: auto;
   width: auto;
 }
@@ -66,3 +64,4 @@ html {
 .rating > h2 {
   padding: 5px
 }
+

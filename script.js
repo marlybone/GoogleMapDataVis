@@ -176,10 +176,34 @@ function createBoxes(data) {
     div.innerHTML = `
     <h1>${obj.name}</h1>
     <h4>Address: ${obj.formatted_address}</h3>
-    <div>
-    <h5>${obj.reviews[0].author_name}</h5>
-    <p>${obj.reviews[0].text}</p>
+    <div class="swiffy-slider">
+    <ul class="slider-container">
+        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[0].author_name}                </h5>
+        <p>${obj.reviews[0].text}</p>
+        <h6>${obj.reviews[0].relative_time_description}</h6></li>
+        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[1].author_name}                </h5>
+        <p>${obj.reviews[1].text}</p>
+        <h6>${obj.reviews[1].relative_time_description}</h6></li>
+        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[2].author_name}                </h5>
+        <p>${obj.reviews[2].text}</p>
+        <h6>${obj.reviews[2].relative_time_description}</h6></li>
+        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[3].author_name}                </h5>
+        <p>${obj.reviews[3].text}</p>
+        <h6>${obj.reviews[3].relative_time_description}</h6></li>
+        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[4].author_name}                </h5>
+        <p>${obj.reviews[4].text}</p>
+        <h6>${obj.reviews[4].relative_time_description}</h6></li>
+    </ul>
+
+    <button type="button" class="slider-nav"></button>
+    <button type="button" class="slider-nav slider-nav-next"></button>
+
+    <div class="slider-indicators">
+        <button class="active"></button>
+        <button></button>
+        <button></button>
     </div>
+</div>
     <div class='rating'>
     <h2>${obj.rating}</h2>
     <i class="fas fa-star" style="color: yellow;"></i>
