@@ -170,45 +170,36 @@ function fetchCityData() {
 
 function createBoxes(data) {
   const container = document.querySelector("#container");
-    data.forEach(obj => {
+    data.forEach(obj => {    
     let div = document.createElement('div');
     div.classList.add('box');
     div.innerHTML = `
     <h1>${obj.name}</h1>
     <p class='address'>Address: ${obj.formatted_address}</p>
-    <div class="swiffy-slider">
-    <ul class="slider-container">
-        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[0].author_name}                </h5>
-        <p>${obj.reviews[0].text}</p>
-        <h6>${obj.reviews[0].relative_time_description}</h6></li>
-        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[1].author_name}                </h5>
-        <p>${obj.reviews[1].text}</p>
-        <h6>${obj.reviews[1].relative_time_description}</h6></li>
-        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[2].author_name}                </h5>
-        <p>${obj.reviews[2].text}</p>
-        <h6>${obj.reviews[2].relative_time_description}</h6></li>
-        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[3].author_name}                </h5>
-        <p>${obj.reviews[3].text}</p>
-        <h6>${obj.reviews[3].relative_time_description}</h6></li>
-        <li><h5 style="max-width: 100%;height: auto;">${obj.reviews[4].author_name}                </h5>
-        <p>${obj.reviews[4].text}</p>
-        <h6>${obj.reviews[4].relative_time_description}</h6></li>
+         <div class="swiffy-slider">
+  <ul class="slider-container"> 
+        ${obj.reviews ? obj.reviews.map(review => `
+    <li>
+      ${review.author_name ? `<h5 style="max-width: 100%;height: auto;">${review.author_name}</h5>` : ''}
+      ${review.text ? `<p>${review.text}</p>` : ''}
+      ${review.relative_time_description ? `<h6>${review.relative_time_description}</h6>` : ''}
+    </li>
+  `).join('') : ''}
     </ul>
-
     <button type="button" class="slider-nav"></button>
     <button type="button" class="slider-nav slider-nav-next"></button>
-
     <div class="slider-indicators">
         <button class="active"></button>
         <button></button>
         <button></button>
-    </div>
-</div>
+        </div>
+     ${obj.rating ? `
     <div class='rating'>
-    <h2>${obj.rating}</h2>
-    <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: black;"></i>
-    </div
+      <h2>${obj.rating}</h2>
+      <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;"></i>
+    </div>
+  ` : ''}
     `;
     container.appendChild(div);
     })
