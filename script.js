@@ -20,7 +20,6 @@ var mapStyle = [{
         }];
 
 
-
   function initMap() {
      var options = {
      center: myLngLat,
@@ -90,10 +89,11 @@ async function searchPlaces() {
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
     console.log('done');
     sessionStorage.setItem('places', JSON.stringify(places));
-    window.open('tourism.html');
+  window.open('tourism.html')
 }
 
-    
+
+
   var element = document.getElementById('button');
   element.addEventListener('click', function() {
   citySearch();
@@ -121,6 +121,11 @@ const cityOptions = {
   types: ['(cities)'],
   strickBounds: false,
 }
+
+/* variables for cost of living API */
+let cityName;
+let countryName;
+let value;
 
 
 /* PlacesSearch function*/ 
@@ -204,3 +209,29 @@ function createBoxes(data) {
     container.appendChild(div);
     })
 }
+
+/* cost of living function for api data retrieval*/
+  document.getElementById('country-name').addEventListener('click', livingCost);
+function livingCost() {
+  value = input.value
+  
+}
+
+/* person types in city but the function won't initialise until cost of living drop down is selected
+
+cost of living is selected and types in city name and search button will save values on the inputted city 
+
+then I will need to get the city name and coutry name and put them in different variables
+
+use these two variables to make the get request
+
+present the data on the tourism.html much the same as the tourist attractions
+-------------------------------------------------------------------------------
+to add - 
+*button to increase distance to search tourist attractions - 2.5k - 5k - 10k - 15k
+*would like to add city geojson data to highlight city when it has been search and perhaps even revert the map styles to off within the polygon bounds
+* cost of living calculator? with values of the citys api data as keys on the keyboard so people can just click the button to add the price of e.g apartment rent, beer etc may be too many things to add though
+* more country data things like - inflation / excess covid deaths? gdp growth, birth rate, happiness, life expentancy?
+*css improvements and look at efficiency
+
+*/
