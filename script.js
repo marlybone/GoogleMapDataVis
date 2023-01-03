@@ -213,8 +213,18 @@ function createBoxes(data) {
 /* cost of living function for api data retrieval*/
   document.getElementById('country-name').addEventListener('click', livingCost);
 function livingCost() {
+  var re = /^\w+/;
+
   value = input.value
-  
+
+  cityName = value.match(re);
+  countryName = value.match(/^\b\w+\b/)[0];
+
+  fetch('', options)
+  .then(res => res.json)
+  .then(data => {
+    
+  })
 }
 
 /* person types in city but the function won't initialise until cost of living drop down is selected
