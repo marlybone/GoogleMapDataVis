@@ -143,8 +143,8 @@ let places = [];
 const options = {
 	method: 'GET',
 	headers: {
-    'X-RapidAPI-Key': '3dcd448ec1msh2b4f01bc724171fp1ee5bdjsn24e082f33ce9',
-		'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
+    'X-RapidAPI-Key': '465cd1dd34msh19e6aab3eb40ec2p172d7djsn2291a31a6271',
+		'X-RapidAPI-Host': 'cost-of-living-and-prices.p.rapidapi.com'
 	}
 };
 
@@ -211,20 +211,22 @@ function createBoxes(data) {
 }
 
 /* cost of living function for api data retrieval*/
-  document.getElementById('country-name').addEventListener('click', livingCost);
+
 function livingCost() {
   var re = /^\w+/;
 
-  value = input.value
+  let input = document.getElementById('country-name');
+  value = input.value;
 
   cityName = value.match(re);
-  countryName = value.match(/^\b\w+\b/)[0];
+  countryName = value.match(/\b\w+$/)[0];
 
-  fetch('', options)
-  .then(res => res.json)
+  fetch(`https://cost-of-living-and-prices.p.rapidapi.com/prices?city_name=${cityName}&country_name=${countryName}`, options)
+  .then(res => res.json())
   .then(data => {
-    
-  })
+    console.log(data);
+    console.log(value)
+  });
 }
 
 /* person types in city but the function won't initialise until cost of living drop down is selected
