@@ -83,11 +83,10 @@ async function searchPlaces() {
 
     const details = await Promise.all(results.map(result => new Promise(resolve => service.getDetails({
         placeId: result.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'photos', 'rating', 'url', 'review'],
+        fields: ['name', 'formatted_address', 'geometry', 'rating', 'review'],
         language: 'en'
     }, (place, status) => resolve({ place, status })))));
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
-    console.log('done');
     sessionStorage.setItem('places', JSON.stringify(places));
   window.open('tourism.html')
 }
@@ -126,6 +125,7 @@ const cityOptions = {
 let cityName;
 let countryName;
 let value;
+let costs;
 
 
 /* PlacesSearch function*/ 
@@ -224,8 +224,8 @@ function livingCost() {
   fetch(`https://cost-of-living-and-prices.p.rapidapi.com/prices?city_name=${cityName}&country_name=${countryName}`, options)
   .then(res => res.json())
   .then(data => {
-    console.log(data);
-    console.log(value)
+    cost = Object.assign({}, data);
+    console.log(cost)
   });
 }
 

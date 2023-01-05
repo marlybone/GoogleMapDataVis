@@ -17,17 +17,17 @@
   <body>
     <section id='container' class='container'>
     </section>
+    <section>
+      <table>
+        <tr></tr>
+      </table>
+    </section>
     <script src="script.js">
     </script>
     <script>
       places = JSON.parse(sessionStorage.getItem('places'));
       console.log(places);
       createBoxes(places);
-
-
-    </script>
-    <script defer>
-       
     </script>
     <script defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU&libraries=places"
