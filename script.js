@@ -271,6 +271,18 @@ function loadTheData() {
       });
   }
 
+function clearData(){
+      min = Number.MAX_VALUE;
+      max = -Number.MAX_VALUE;
+
+      map.data.forEach((row) =>{
+        row.setProperty('census-variable', undefined);       
+      });
+      document.getElementById('data-box').style.display = 'none';
+      document.getElementById("data-caret").style.display = "none";
+}
+  
+
 /* person types in city but the function won't initialise until cost of living drop down is selected
 
 cost of living is selected and types in city name and search button will save values on the inputted city 
