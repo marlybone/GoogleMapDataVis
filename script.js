@@ -1,3 +1,4 @@
+let map;
 var APIKEY = 'AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU';
 const myLngLat = {lat: 51.4931, lng: -0.118092};
 var polygonData = 'https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson';
@@ -18,17 +19,71 @@ var mapStyle = [{
           'elementType': 'geometry',
           'stylers': [{'visibility': 'on'}, {'hue': '#5f94ff'}, {'lightness': 60}]
         }];
+/* variables to contribute to marker and city location for API retrieval*/
+var lat = ''; 
+var lng = '';
+var place = '';
+var cityInput = '';
+var latLong = '';
+
+/* Variable to assist with click event to get the countries ISO code*/
+var searchLocation;
+var stat = '';
+var geo = '';
 
 
-  function initMap() {
-     var options = {
+/* Variables to assist with autocomplete city name in the search bar*/
+var searchInput = '';
+const cityOptions = {
+  types: ['(cities)'],
+  strickBounds: false,
+}
+
+/* variables for cost of living API */
+let cityName;
+let countryName;
+let value;
+let costs;
+
+
+/* PlacesSearch function*/ 
+var mapDiv = document.getElementById('map');
+var mapOptions = {
+  center: myLngLat,
+  zoom: 6,
+  styles: mapStyle
+};
+let places = [];
+
+
+
+/* API key for RapidAPI*/
+const options = {
+	method: 'GET',
+	headers: {
+    'X-RapidAPI-Key': '465cd1dd34msh19e6aab3eb40ec2p172d7djsn2291a31a6271',
+		'X-RapidAPI-Host': 'cost-of-living-and-prices.p.rapidapi.com'
+	}
+};
+     var mapOptions = {
      center: myLngLat,
      zoom: 5,
      styles: mapStyle,
    };
-  
-  var map = new google.maps.Map(document.getElementById('map'), options)
-  var marker = new google.maps.Marker({
+
+
+/* Event Listeners */
+  const select = document.getElementById('census-variable')
+  let selected = select.value;
+ select.addEventListener('change', () => {
+      clearData();
+      selected = select.value;
+      loadTheData();
+    })
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), mapOptions)
+    var marker = new google.maps.Marker({
     position: myLngLat,
     map:map,
     draggable: false
@@ -91,62 +146,12 @@ async function searchPlaces() {
   window.open('tourism.html')
 }
 
-
-
   var element = document.getElementById('button');
   element.addEventListener('click', function() {
   citySearch();
   searchPlaces();
 });
 }
-
-
-/* variables to contribute to marker and city location for API retrieval*/
-var lat = ''; 
-var lng = '';
-var place = '';
-var cityInput = '';
-var latLong = '';
-
-/* Variable to assist with click event to get the countries ISO code*/
-var searchLocation;
-var stat = '';
-var geo = '';
-
-
-/* Variables to assist with autocomplete city name in the search bar*/
-var searchInput = '';
-const cityOptions = {
-  types: ['(cities)'],
-  strickBounds: false,
-}
-
-/* variables for cost of living API */
-let cityName;
-let countryName;
-let value;
-let costs;
-
-
-/* PlacesSearch function*/ 
-var mapDiv = document.getElementById('map');
-var mapOptions = {
-  center: myLngLat,
-  zoom: 6,
-  styles: mapStyle
-};
-let places = [];
-
-
-
-/* API key for RapidAPI*/
-const options = {
-	method: 'GET',
-	headers: {
-    'X-RapidAPI-Key': '465cd1dd34msh19e6aab3eb40ec2p172d7djsn2291a31a6271',
-		'X-RapidAPI-Host': 'cost-of-living-and-prices.p.rapidapi.com'
-	}
-};
 
 /* API to fetch data from GEOGB cities */
 function fetchMapOverlapData() {
