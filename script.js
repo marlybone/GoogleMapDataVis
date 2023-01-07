@@ -1,4 +1,4 @@
-let map;
+
 var APIKEY = 'AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU';
 const myLngLat = {lat: 51.4931, lng: -0.118092};
 var polygonData = 'https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson';
@@ -19,6 +19,13 @@ var mapStyle = [{
           'elementType': 'geometry',
           'stylers': [{'visibility': 'on'}, {'hue': '#5f94ff'}, {'lightness': 60}]
         }];
+
+let min = Number.MAX_VALUE;
+let max = -Number.MAX_VALUE;
+let variable;
+let countryData;
+let map;
+
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
 var lng = '';
@@ -89,28 +96,6 @@ const options = {
     draggable: false
   });
 
-  map.data.loadGeoJson(polygonData);
-   map.data.setStyle({
-    fillColor: 'green',
-    strokeWeight: 0.7,
-    strokeColor: 'white',
-    strokeOpacity: 0.4
-   });
-  map.data.addListener('click', function(e) {
-    searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
-    fetchMapOverlapData();
-  });
-    map.data.addListener('mouseover', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
-    map.data.addListener('mouseout', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 0.7, strokeOpacity: 0.4})
-    });
-      });
-    map.data.addListener('click', function(e) {
-    lat = e.latLng.lng();
-    lng = e.latLng.lat();
-});
-  
   const input = document.getElementById('country-name');
   const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   autoComplete.bindTo("bounds", map);
@@ -125,7 +110,7 @@ const options = {
       latLong = ({ lat, lng });
     }
   });
-    
+ 
 async function searchPlaces() {
     const service = new google.maps.places.PlacesService(map);
     const { results, status } = await new Promise(resolve => service.nearbySearch({
@@ -150,6 +135,30 @@ async function searchPlaces() {
   element.addEventListener('click', function() {
   citySearch();
   searchPlaces();
+});
+    loadMapShapes();
+}
+
+async function loadMapShapes() { map.data.loadGeoJson('https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson',   { idPropertyName: 'ADMIN' });
+      map.data.setStyle({
+      fillColor: 'green',
+      strokeWeight: 0.7,
+      strokeColor: 'white',
+      strokeOpacity: 0.4
+   });
+   map.data.addListener('click', function(e) {
+    searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
+    fetchMapOverlapData();
+  });
+    map.data.addListener('mouseover', function(e) {
+      map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
+    map.data.addListener('mouseout', function(e) {
+      map.data.overrideStyle(e.feature, {strokeWeight: 0.7, strokeOpacity: 0.4})
+    });
+      });
+    map.data.addListener('click', function(e) {
+    lat = e.latLng.lng();
+    lng = e.latLng.lat();
 });
 }
 
@@ -233,6 +242,34 @@ function livingCost() {
     console.log(cost)
   });
 }
+
+function loadTheData() {
+    fetch('data.csv')
+      .then(res => res.text())
+      .then(data => {
+        const rows = data.split('\n').map(row => row.split(','));
+        const rowss = rows.filter(rows => rows.includes(selected));
+        countryData = rowss.map(row => ({ index11: parseFloat(Number(row[11]).toFixed(2)), index0: row[0]})).filter(element => !isNaN(element.index11)); 
+
+        countryData.forEach((row) => {
+          if(row.index11 < min) {
+            min = Math.floor(row.index11);
+          }
+          if(row.index11 > max) {
+            max = Math.ceil(row.index11);
+          }
+        document.getElementById('census-min').textContent =
+          min.toLocaleString();
+        document.getElementById('census-max').textContent =
+          max.toLocaleString();
+       const admin = map.data.getFeatureById(row.index0)
+        if (admin) {
+          admin.setProperty('census_variable', row.index11)
+          console.log(admin)
+        }
+        });
+      });
+  }
 
 /* person types in city but the function won't initialise until cost of living drop down is selected
 
