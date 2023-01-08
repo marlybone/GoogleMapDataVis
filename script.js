@@ -1,7 +1,5 @@
-
 var APIKEY = 'AIzaSyC75kqs_RD694ILnPBt0cOAsyzQwpSBfaU';
 const myLngLat = {lat: 51.4931, lng: -0.118092};
-var polygonData = 'https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson';
 var mapStyle = [{
           'featureType': 'all',
           'elementType': 'all',
@@ -25,6 +23,7 @@ let max = -Number.MAX_VALUE;
 let variable;
 let countryData;
 let map;
+let admin;
 
 /* variables to contribute to marker and city location for API retrieval*/
 var lat = ''; 
@@ -96,6 +95,17 @@ const options = {
     draggable: false
   });
 
+    map.data.setStyle(styleFeature);
+    map.data.addListener("mouseover", mouseInToRegion);
+    map.data.addListener("mouseout", mouseOutOfRegion);
+
+    google.maps.event.addListenerOnce(map.data, "addfeature", () => {
+    google.maps.event.trigger(
+      document.getElementById("census-variable"),
+      "change"
+    );
+  });
+
   const input = document.getElementById('country-name');
   const autoComplete = new google.maps.places.Autocomplete(input, cityOptions);
   autoComplete.bindTo("bounds", map);
@@ -139,23 +149,12 @@ async function searchPlaces() {
     loadMapShapes();
 }
 
-async function loadMapShapes() { map.data.loadGeoJson('https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson',   { idPropertyName: 'ADMIN' });
-      map.data.setStyle({
-      fillColor: 'green',
-      strokeWeight: 0.7,
-      strokeColor: 'white',
-      strokeOpacity: 0.4
-   });
+async function loadMapShapes() { map.data.loadGeoJson('https://s3.amazonaws.com/rawstore.datahub.io/23f420f929e0e09c39d916b8aaa166fb.geojson', { idPropertyName: "ISO_A3" });
+
    map.data.addListener('click', function(e) {
     searchLocation = (e.feature.getProperty('ISO_A3').slice(0, 2));
     fetchMapOverlapData();
   });
-    map.data.addListener('mouseover', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 2.5, strokeOpacity: 1})
-    map.data.addListener('mouseout', function(e) {
-      map.data.overrideStyle(e.feature, {strokeWeight: 0.7, strokeOpacity: 0.4})
-    });
-      });
     map.data.addListener('click', function(e) {
     lat = e.latLng.lng();
     lng = e.latLng.lat();
@@ -247,9 +246,17 @@ function loadTheData() {
     fetch('data.csv')
       .then(res => res.text())
       .then(data => {
-        const rows = data.split('\n').map(row => row.split(','));
+        const rows = data.split(/\r?\n/).map(row => {
+        if (row.includes('"')) {
+        return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      }
+        else {
+        return row.split(',');
+  }      
+});
+        console.log(rows)
         const rowss = rows.filter(rows => rows.includes(selected));
-        countryData = rowss.map(row => ({ index11: parseFloat(Number(row[11]).toFixed(2)), index0: row[0]})).filter(element => !isNaN(element.index11)); 
+        countryData = rowss.map(row => ({ index11: parseFloat(Number(row[12]).toFixed(2)), index0: row[1]})).filter(element => !isNaN(element.index11)); 
 
         countryData.forEach((row) => {
           if(row.index11 < min) {
@@ -271,21 +278,83 @@ function loadTheData() {
       });
   }
 
+/* function to clear the date and return values back to default*/
 function clearData(){
       min = Number.MAX_VALUE;
       max = -Number.MAX_VALUE;
 
       map.data.forEach((row) =>{
-        row.setProperty('census-variable', undefined);       
+        row.setProperty('census_variable', undefined);       
       });
       document.getElementById('data-box').style.display = 'none';
       document.getElementById("data-caret").style.display = "none";
 }
+
+/*function to connect colors to data and styles*/
+function styleFeature(feature) {
+  const low = [5, 69, 54];
+  const high = [151, 83, 34];
+
+  const delta =
+    (feature.getProperty("census_variable") - min) /
+    (max - min);
+  const color = [];
+
+  for (let i = 0; i < 3; i++) {
+    color.push((high[i] - low[i]) * delta + low[i]);
+  }
+
+  let showRow = true;
+
+  if (
+    feature.getProperty("census_variable") == null ||
+    isNaN(feature.getProperty("census_variable"))
+  ) {
+    showRow = false;
+  }
+
+  let outlineWeight = 0.5,
+    zIndex = 1;
+
+  if (feature.getProperty("admin") === "hover") {
+    outlineWeight = zIndex = 2;
+  }
+  return {
+    strokeWeight: outlineWeight,
+    strokeColor: "#fff",
+    zIndex: zIndex,
+    fillColor: "hsl(" + color[0] + "," + color[1] + "%," + color[2] + "%)",
+    fillOpacity: 0.75,
+    visible: showRow,
+  };
+}
+/*function to present country name, data in the vat value when hovering over*/
+function mouseInToRegion(e) {
+  e.feature.setProperty("admin", "hover");
+  const percent =
+    ((e.feature.getProperty("census_variable") - min) /
+      (max - min)) *
+    100;
+
+ document.getElementById("data-label").textContent =
+    e.feature.getProperty("ADMIN");
+  document.getElementById("data-value").textContent = e.feature
+    .getProperty("census_variable")
+    .toLocaleString();
+  document.getElementById("data-box").style.display = "block";
+  document.getElementById("data-caret").style.display = "block";
+  document.getElementById("data-caret").style.paddingLeft = percent + "%";
+}
+
+/*return to normal on mouse out.*/
+function mouseOutOfRegion(e) {
+  e.feature.setProperty("admin", "normal");
+}
   
 
-/* person types in city but the function won't initialise until cost of living drop down is selected
+/*
 
-cost of living is selected and types in city name and search button will save values on the inputted city 
+cost of living is selected and types in city name and search button will save values on the inputted city - 
 
 then I will need to get the city name and coutry name and put them in different variables
 
@@ -295,9 +364,7 @@ present the data on the tourism.html much the same as the tourist attractions
 -------------------------------------------------------------------------------
 to add - 
 *button to increase distance to search tourist attractions - 2.5k - 5k - 10k - 15k
-*would like to add city geojson data to highlight city when it has been search and perhaps even revert the map styles to off within the polygon bounds
-* cost of living calculator? with values of the citys api data as keys on the keyboard so people can just click the button to add the price of e.g apartment rent, beer etc may be too many things to add though
-* more country data things like - inflation / excess covid deaths? gdp growth, birth rate, happiness, life expentancy?
+* add a table with cost of living data
 *css improvements and look at efficiency
 
 */
