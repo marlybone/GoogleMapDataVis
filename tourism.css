@@ -8,6 +8,7 @@ body {
   margin: auto;
   padding: 40px;
   background: -webkit-linear-gradient(55deg, #65dfc9, #6cdbeb);
+  opacity: 0.9;
 }
 
 
@@ -17,8 +18,9 @@ body {
   grid-gap: 15px;
   margin: 10px 10px auto;
   padding: 25px;
-  background: linear-gradient(to top, rgb(255, 255, 255, 0.7), rgb(255, 255, 255, 0.2));
+  background: linear-gradient(to right, rgb(255, 255, 255, 0.8), rgb(255, 255, 255, 0.2));
   border-radius: 2rem;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
 .box {
@@ -28,7 +30,7 @@ body {
   height: 150px;
   overflow: hidden;
   background: linear-gradient(to right, rgb(255, 255, 255, 0.8), rgb(255, 255, 255, 0.2));
-  border: black;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .box:hover {
@@ -41,6 +43,7 @@ body {
   justify-content: center;
   display: flex;
   font-weight: 400;
+  opacity: 0.9;
 }
 
 .address {

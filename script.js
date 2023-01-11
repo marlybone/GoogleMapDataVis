@@ -133,11 +133,23 @@ async function searchPlaces() {
 
     const details = await Promise.all(results.map(result => new Promise(resolve => service.getDetails({
         placeId: result.place_id,
-        fields: ['name', 'formatted_address', 'geometry', 'rating', 'review'],
+        fields: ['name', 'formatted_address', 'geometry', 'rating', 'review', 'photos'],
         language: 'en'
     }, (place, status) => resolve({ place, status })))));
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
-    sessionStorage.setItem('places', JSON.stringify(places));
+    if(places.some(place=> place.photos)){
+        let photoUrls = places.map(place => place.photos.map((photo) => {
+        let url = photo.getUrl({ maxWidth: 800, maxHeight: 800 });
+        return url;
+        })).flat();
+        let updatedPlaces = places.map((place) => {
+        let updatedPhotos = place.photos.map((photo, i) => {
+            return Object.assign({}, photo, {html_attributions: photoUrls[i]});
+        });
+        return Object.assign({}, place, {photos: updatedPhotos});
+        });
+    sessionStorage.setItem('updatedPlaces', JSON.stringify(updatedPlaces));
+    }
   window.open('tourism.html')
 }
 
@@ -188,11 +200,19 @@ function fetchCityData() {
 
 function createBoxes(data) {
   const container = document.querySelector("#container");
-    data.forEach(obj => {    
+    data.forEach(obj => {
     let div = document.createElement('div');
     div.classList.add('box');
+     for (var i = 0; i < obj.length; i++) {
+        var photo_reference = obj.photos[i].photo_reference;
+       console.log(photo_reference)
+        var width = obj.photos[i].width;
+        var url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${width}&photoreference=${photo_reference}&key=${APIKEY}`;
+       console.log(url)
+     }
     div.innerHTML = `
     <h1>${obj.name}</h1>
+    <img src=${url}/>
     <p class='address'>Address: ${obj.formatted_address}</p>
          <div class="swiffy-slider">
   <ul class="slider-container"> 
