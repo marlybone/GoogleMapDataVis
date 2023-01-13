@@ -139,16 +139,20 @@ async function searchPlaces() {
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
     if(places.some(place=> place.photos)){
         let photoUrls = places.map(place => place.photos.map((photo) => {
-        let url = photo.getUrl({ maxWidth: 800, maxHeight: 800 });
+        let url = photo.getUrl({ maxWidth: 550, maxHeight: 500 });
         return url;
         })).flat();
-        let updatedPlaces = places.map((place) => {
-        let updatedPhotos = place.photos.map((photo, i) => {
-            return Object.assign({}, photo, {html_attributions: photoUrls[i]});
-        });
-        return Object.assign({}, place, {photos: updatedPhotos});
-        });
-    sessionStorage.setItem('updatedPlaces', JSON.stringify(updatedPlaces));
+      let updatedPlaces = places.map((place) => {
+  if(place.photos) {
+    let updatedPhotos = place.photos.map(photo => {
+        let url = photo.getUrl({ maxWidth: 550, maxHeight: 500 });
+        return {...photo, html_attributions: url}
+    });
+    return {...place, photos: updatedPhotos}
+  }
+  return place;
+})
+sessionStorage.setItem('updatedPlaces', JSON.stringify(updatedPlaces));
     }
   window.open('tourism.html')
 }
@@ -173,16 +177,6 @@ async function loadMapShapes() { map.data.loadGeoJson('https://s3.amazonaws.com/
 });
 }
 
-/* API to fetch data from GEOGB cities */
-function fetchMapOverlapData() {
-    fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/countries/${searchLocation}`, options)
-  .then(res => res.json())
-  .then(data => {
-  console.log(searchLocation);
-  stat = data;
-  })
-}
-
 /* function to get the value of the city and then only get the first word of the city */
 function citySearch() {
  searchInput = document.getElementById('country-name').value;
@@ -201,46 +195,48 @@ function fetchCityData() {
 function createBoxes(data) {
   const container = document.querySelector("#container");
     data.forEach(obj => {
-    let div = document.createElement('div');
+      let div = document.createElement('div');
+        let divtwo = document.createElement('div')
     div.classList.add('box');
-     for (var i = 0; i < obj.length; i++) {
-        var photo_reference = obj.photos[i].photo_reference;
-       console.log(photo_reference)
-        var width = obj.photos[i].width;
-        var url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${width}&photoreference=${photo_reference}&key=${APIKEY}`;
-       console.log(url)
-     }
+    divtwo.classList.add('box-two');
+      if(obj.photos && obj.photos.length > 0) {
+        let randomIndex = Math.floor(Math.random()*obj.photos.length);
+          let randomPhoto = obj.photos[randomIndex];
     div.innerHTML = `
-    <h1>${obj.name}</h1>
-    <img src=${url}/>
-    <p class='address'>Address: ${obj.formatted_address}</p>
+      <img src=${randomPhoto.html_attributions}/>
+      `;
+    divtwo.innerHTML = `
+    <div>${obj.name}</div>
+      <div class='address'>Address: ${obj.formatted_address}</div>
          <div class="swiffy-slider">
-  <ul class="slider-container"> 
-        ${obj.reviews ? obj.reviews.map(review => `
-    <li>
-      ${review.author_name ? `<h5 style="max-width: 100%;height: auto;">${review.author_name}</h5>` : ''}
-      ${review.text ? `<p>${review.text}</p>` : ''}
-      ${review.relative_time_description ? `<h6>${review.relative_time_description}</h6>` : ''}
-    </li>
-  `).join('') : ''}
-    </ul>
-    <button type="button" class="slider-nav"></button>
-    <button type="button" class="slider-nav slider-nav-next"></button>
+            <ul class="slider-container"> 
+              ${obj.reviews ? obj.reviews.map(review => `
+              <li>
+                 ${review.author_name ?  
+                  `<div style="max-width: 100%;height:auto;">${review.author_name}</div>` : ''}
+                  ${review.text ? `<p>${review.text}</p>` : ''}
+                  ${review.relative_time_description ? 
+                  `<h6>${review.relative_time_description}</h6>` : ''}
+              </li> `).join('') : ''}
+            </ul>
+              <button type="button" class="slider-nav"></button>
+              <button type="button" class="slider-nav slider-nav-next"></button>
     <div class="slider-indicators">
-        <button class="active"></button>
-        <button></button>
-        <button></button>
-        </div>
-     ${obj.rating ? `
-    <div class='rating'>
-      <h2>${obj.rating}</h2>
-      <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;"></i>
+      <button class="active"></button>
+      <button></button>
+      <button></button>
     </div>
-  ` : ''}
-    `;
-    container.appendChild(div);
-    })
+      ${obj.rating ? `
+    <div class='rating'>
+      <div>${obj.rating}</div>
+        <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
+          -webkit-text-stroke-color: black;"></i>
+    </div>
+        ` : ''}`;
+          div.appendChild(divtwo)
+          container.appendChild(div);
+    }
+  })
 }
 
 /* cost of living function for api data retrieval*/
