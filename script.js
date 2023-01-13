@@ -139,13 +139,13 @@ async function searchPlaces() {
     places = details.filter(({ status }) => status === google.maps.places.PlacesServiceStatus.OK).map(({ place }) => place);
     if(places.some(place=> place.photos)){
         let photoUrls = places.map(place => place.photos.map((photo) => {
-        let url = photo.getUrl({ maxWidth: 550, maxHeight: 500 });
+        let url = photo.getUrl({ maxWidth: 550, maxHeight: 550 });
         return url;
         })).flat();
       let updatedPlaces = places.map((place) => {
   if(place.photos) {
     let updatedPhotos = place.photos.map(photo => {
-        let url = photo.getUrl({ maxWidth: 550, maxHeight: 500 });
+        let url = photo.getUrl({ maxWidth: 550, maxHeight: 550 });
         return {...photo, html_attributions: url}
     });
     return {...place, photos: updatedPhotos}
@@ -206,14 +206,21 @@ function createBoxes(data) {
       <img src=${randomPhoto.html_attributions}/>
       `;
     divtwo.innerHTML = `
-    <div>${obj.name}</div>
+    <div class='obj-name'>${obj.name}</div>
+     ${obj.rating ? `
+    <div class='rating'>
+      <div>${obj.rating}</div>
+        <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
+          -webkit-text-stroke-color: black;"></i>
+    </div>
+        ` : ''}
       <div class='address'>Address: ${obj.formatted_address}</div>
          <div class="swiffy-slider">
             <ul class="slider-container"> 
               ${obj.reviews ? obj.reviews.map(review => `
               <li>
                  ${review.author_name ?  
-                  `<div style="max-width: 100%;height:auto;">${review.author_name}</div>` : ''}
+                  `<div class='review' style="max-width: 100%;height:auto;">${review.author_name}</div>` : ''}
                   ${review.text ? `<p>${review.text}</p>` : ''}
                   ${review.relative_time_description ? 
                   `<h6>${review.relative_time_description}</h6>` : ''}
@@ -221,18 +228,7 @@ function createBoxes(data) {
             </ul>
               <button type="button" class="slider-nav"></button>
               <button type="button" class="slider-nav slider-nav-next"></button>
-    <div class="slider-indicators">
-      <button class="active"></button>
-      <button></button>
-      <button></button>
-    </div>
-      ${obj.rating ? `
-    <div class='rating'>
-      <div>${obj.rating}</div>
-        <i class="fas fa-star" style="color: yellow; -webkit-text-stroke-width: 1px;
-          -webkit-text-stroke-color: black;"></i>
-    </div>
-        ` : ''}`;
+     `;
           div.appendChild(divtwo)
           container.appendChild(div);
     }

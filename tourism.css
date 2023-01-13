@@ -7,7 +7,7 @@ html,
 body {
   min-height: 100vh;
   margin: auto;
-  padding: 40px;
+  padding: 30px;
   background: -webkit-linear-gradient(55deg, #65dfc9, #6cdbeb);
   opacity: 0.9;
 }
@@ -20,24 +20,30 @@ body {
   margin: 10px 10px auto;
   padding: 25px;
   background: linear-gradient(to right, rgb(255, 255, 255, 0.8), rgb(255, 255, 255, 0.2));
-  border-radius: 2rem;
+  border-radius: 1rem;
   box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   position: absolute;
 }
 
 .box {
-  width: 550px;
-  height: 475px;
+  width: 480px;
+  height: 480px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;  
   overflow: hidden;
   position: relative;
   transition: transform 0.2s ease-in-out;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+}
+
+.box:hover {
+  height: auto;
+  width: auto;
 }
 
 .box img {
-  display: block;
   object-fit: cover;
-  background-size: auto;
   width: 100%;
   height: 100%;
 }
@@ -47,12 +53,12 @@ body {
   top: 0;
   left: 0;
   display: flex;
+  justify-content: flex-start;
   background: rgba(0, 0, 0, 0.7);
   flex-direction: column;
   height: 100%;
   width: 100%;
   align-items: center;
-  justify-content: center;
   opacity: 0;
   transition: opacity 0.25s;
 }
@@ -61,12 +67,15 @@ body {
   opacity: 1;
 }
 
-.box-two > address {
-  
+.address {
+  padding: 5px; 
+  margin-bottom: 5%;
 }
 
-.box-two > h2 {
-  
+.obj-name {
+  padding: 10px;
+  font-size: 1.5em;
+  top: 0;
 }
 
 .rating {
@@ -75,10 +84,13 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 }
 
-.rating > h2 {
-  padding: 5px
+.swiffy-slider {
+  font-size: 0.9em;
+  margin: auto;
+  padding: 10px;
 }
 
 .box-two > i {
