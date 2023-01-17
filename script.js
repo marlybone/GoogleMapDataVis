@@ -125,7 +125,7 @@ function initMap() {
     const service = new google.maps.places.PlacesService(map);
     const { results, status } = await new Promise(resolve => service.nearbySearch({
       location: latLong,
-      radius: 5000,
+      radius: 10000,
       type: 'tourist_attraction'
     }, (results, status) => resolve({ results, status })));
 
@@ -176,6 +176,12 @@ async function loadMapShapes() {
     lat = e.latLng.lng();
     lng = e.latLng.lat();
   });
+}
+
+/* function to get the value of the city and then only get the first word of the city */
+function citySearch() {
+  searchInput = document.getElementById('country-name').value;
+  cityInput = searchInput.match(/\b\w+/);
 }
 
 function createBoxes(data) {
@@ -252,9 +258,9 @@ function loadTheData() {
           return row.split(',');
         }
       });
+      console.log(rows)
       const rowss = rows.filter(rows => rows.includes(selected));
       countryData = rowss.map(row => ({ index11: parseFloat(Number(row[12]).toFixed(2)), index0: row[1] })).filter(element => !isNaN(element.index11));
-
       countryData.forEach((row) => {
         if (row.index11 < min) {
           min = Math.floor(row.index11);
